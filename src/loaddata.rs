@@ -1,15 +1,21 @@
-use std::{error::Error};
+use std::error::Error;
 
 #[derive(Debug, serde::Deserialize)]
 pub struct Road {
-    name: String,
-    start_lat: f64,
-    stop_lat: f64,
-    start_lon: f64,
-    stop_lon: f64,
-    speed_limit: f64,
-    lane_count: f64,
-    road_type: String,
+    pub name: String,
+    pub start_lat: f64,
+    pub stop_lat: f64,
+    pub start_lon: f64,
+    pub stop_lon: f64,
+    pub speed_limit: f64,
+    pub lane_count: f64,
+    pub road_type: String,
+}
+
+impl Road {
+    pub fn get_points(&self) -> [f64; 4] {
+        [self.start_lat, self.start_lon, self.stop_lat, self.stop_lon]
+    }
 }
 
 #[derive(Debug, serde::Deserialize)]
@@ -21,13 +27,13 @@ pub struct Intersection {
 }
 
 pub fn load_roads() -> Result<Vec<Road>, Box<dyn Error>> {
-    let mut rdr = csv::Reader::from_path("src/sample/roads.csv")?;
+    let mut rdr = csv::Reader::from_path("sample/roads.csv")?;
     let records: Vec<Road> = rdr.deserialize().collect::<Result<_, _>>()?;
     Ok(records)
 }
 
 pub fn load_intersections() -> Result<Vec<Intersection>, Box<dyn Error>> {
-    let mut rdr = csv::Reader::from_path("src/sample/intersections.csv")?;
+    let mut rdr = csv::Reader::from_path("sample/intersections.csv")?;
     let records: Vec<Intersection> = rdr.deserialize().collect::<Result<_, _>>()?;
     Ok(records)
 }

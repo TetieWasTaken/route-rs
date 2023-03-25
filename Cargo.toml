@@ -11,6 +11,9 @@ repository = "https://github.com/tetiewastaken/rust-route/"
 license = "Apache-2.0"
 
 [dependencies]
+piston = "*"
 piston_window = "*"
+piston2d-graphics = "*"
+piston2d-opengl_graphics = "*"
 serde = { version = "1", features = ["derive"] }
 csv = "1.1"

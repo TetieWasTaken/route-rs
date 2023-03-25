@@ -1,11 +1,10 @@
-use std::{error::Error};
-
-extern crate piston_window;
+use std::{ error::Error };
 
 mod loaddata;
+mod window;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let records = loaddata::load_data()?;
-    println!("{:?}", records);
+    let (roads, intersections) = loaddata::load_data()?;
+    window::init(roads, intersections);
     Ok(())
 }
