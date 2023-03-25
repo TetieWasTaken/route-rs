@@ -9,7 +9,6 @@ rust-version = "1.68.1"
 readme = "README.md"
 repository = "https://github.com/tetiewastaken/rust-route/"
 license = "Apache-2.0"
-license-file = "LICENSE.md"
 
 [dependencies]
 piston_window = "*"
