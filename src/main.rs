@@ -6,8 +6,6 @@ mod loaddata;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let records = loaddata::load_data()?;
-    for record in records {
-        println!("{:?}", record);
-    }
+    println!("{:?}", records);
     Ok(())
 }
