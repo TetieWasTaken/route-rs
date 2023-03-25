@@ -5,6 +5,9 @@ extern crate piston_window;
 mod loaddata;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    loaddata::main()?;
+    let records = loaddata::load_data()?;
+    for record in records {
+        println!("{:?}", record);
+    }
     Ok(())
 }
