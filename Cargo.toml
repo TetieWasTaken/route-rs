@@ -1,0 +1,17 @@
+[package]
+name = "rust-route"
+description = "A simple route planner"
+keywords = ["route", "planner", "piston", "piston_window"]
+version = "0.1.0"
+edition = "2021"
+authors = ["Tetie"]
+rust-version = "1.68.1"
+readme = "README.md"
+repository = "https://github.com/tetiewastaken/rust-route/"
+license = "Apache-2.0"
+license-file = "LICENSE.md"
+
+[dependencies]
+piston_window = "*"
+serde = { version = "1", features = ["derive"] }
+csv = "1.1"
