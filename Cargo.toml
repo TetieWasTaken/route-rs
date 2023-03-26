@@ -1,5 +1,5 @@
 [package]
-name = "rust-route"
+name = "route-rs"
 description = "A simple route planner"
 keywords = ["route", "planner", "piston", "piston_window"]
 version = "0.1.0"
@@ -7,7 +7,7 @@ edition = "2021"
 authors = ["Tetie"]
 rust-version = "1.68.1"
 readme = "README.md"
-repository = "https://github.com/tetiewastaken/rust-route/"
+repository = "https://github.com/tetiewastaken/route-rs/"
 license = "Apache-2.0"
 
 [dependencies]
