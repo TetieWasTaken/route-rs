@@ -34,13 +34,7 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
     while let Some(e) = window.next() {
         if let Some(button) = e.press_args() {
             if button == Button::Mouse(MouseButton::Left) {
-                draw_road = true;
-            }
-        };
-
-        if let Some(button) = e.release_args() {
-            if button == Button::Mouse(MouseButton::Left) {
-                draw_road = false;
+                draw_road = !draw_road;
             }
         };
 
