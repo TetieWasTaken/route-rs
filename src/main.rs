@@ -1,6 +1,7 @@
-use std::{ error::Error };
+use std::error::Error;
 
 mod loaddata;
+mod managers;
 mod window;
 
 fn main() -> Result<(), Box<dyn Error>> {

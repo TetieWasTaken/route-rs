@@ -17,7 +17,8 @@ use opengl_graphics::{GlGraphics, OpenGL};
 use piston::input::*;
 use piston_window::*;
 
-use crate::loaddata::{Intersection, Road};
+use crate::managers::intersection::Intersection;
+use crate::managers::road::Road;
 
 pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
     let opengl = OpenGL::V3_2;
@@ -40,7 +41,7 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
 
         if draw_road {
             if let Some(pos) = e.mouse_cursor_args() {
-                println!("Mouse pos: {:?}", pos);
+                println!("Mouse position: {:?}", pos);
             }
         }
 
