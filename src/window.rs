@@ -27,12 +27,32 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
         .build()
         .unwrap();
 
+    let mut draw_road = false;
+
     let mut gl = GlGraphics::new(opengl);
 
     while let Some(e) = window.next() {
+        if let Some(button) = e.press_args() {
+            if button == Button::Mouse(MouseButton::Left) {
+                draw_road = true;
+            }
+        };
+
+        if let Some(button) = e.release_args() {
+            if button == Button::Mouse(MouseButton::Left) {
+                draw_road = false;
+            }
+        };
+
+        if draw_road {
+            if let Some(pos) = e.mouse_cursor_args() {
+                println!("Mouse pos: {:?}", pos);
+            }
+        }
+
         if let Some(r) = e.render_args() {
             gl.draw(r.viewport(), |c, gl| {
-                clear([1.0; 4], gl);
+                clear([0.1137, 0.1098, 0.0902, 1.0], gl);
 
                 let center = c
                     .transform
@@ -43,7 +63,7 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
                     let color;
 
                     match road.road_type.as_str() {
-                        "asphalt" => color = [0.0, 0.0, 0.0, 1.0],
+                        "asphalt" => color = [0.3529, 0.3529, 0.3529, 1.0],
                         "dirt" => color = [0.5, 0.5, 0.5, 1.0],
                         "gravel" => color = [0.8, 0.8, 0.8, 1.0],
                         _ => color = [0.0, 0.0, 0.0, 1.0],
