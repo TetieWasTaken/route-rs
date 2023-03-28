@@ -64,7 +64,7 @@ impl Logger {
         Logger { level }
     }
 
-    pub fn log(&self, level: LogLevel, message: String) {
+    pub fn log(&self, level: LogLevel, message: &str) {
         if level as u8 >= self.level as u8 {
             println!(
                 "{} [{}] [{}] {}",
@@ -76,23 +76,23 @@ impl Logger {
         }
     }
 
-    pub fn debug(&self, message: String) {
+    pub fn debug(&self, message: &str) {
         self.log(LogLevel::Debug, message);
     }
 
-    pub fn info(&self, message: String) {
+    pub fn info(&self, message: &str) {
         self.log(LogLevel::Info, message);
     }
 
-    pub fn warn(&self, message: String) {
+    pub fn warn(&self, message: &str) {
         self.log(LogLevel::Warn, message);
     }
 
-    pub fn error(&self, message: String) {
+    pub fn error(&self, message: &str) {
         self.log(LogLevel::Error, message);
     }
 
-    pub fn trace(&self, message: String) {
+    pub fn trace(&self, message: &str) {
         self.log(LogLevel::Trace, message);
     }
 }
