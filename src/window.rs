@@ -19,6 +19,7 @@ use piston_window::*;
 
 use crate::managers::intersection::Intersection;
 use crate::managers::road::Road;
+use crate::managers::road::RoadManager;
 
 /// initializes the window and runs the simulation
 ///
@@ -38,6 +39,12 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
     let mut draw_road = false;
 
     let mut gl = GlGraphics::new(opengl);
+
+    let mut road_manager = RoadManager {
+        cache: Some(Vec::<Road>::new()),
+    };
+
+    road_manager.load(Some("sample/roads.csv"));
 
     while let Some(e) = window.next() {
         if let Some(button) = e.press_args() {
@@ -61,7 +68,7 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
                     .trans(r.window_size[0] / 2.0, r.window_size[1] / 2.0);
                 let scale = center.scale(10.0, 10.0);
 
-                for road in &roads {
+                for road in road_manager.cache.as_ref().unwrap() {
                     let color;
 
                     match road.road_type.as_str() {

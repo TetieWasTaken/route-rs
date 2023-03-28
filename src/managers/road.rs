@@ -124,14 +124,18 @@ impl RoadManager {
         wtr.flush().unwrap();
     }
 
-    /// Loads the roads.csv file into the cache. This will overwrite the cache.
+    /// Specify a path to load in, defaults to "data/roads.csv". This will overwrite the cache.
     ///
     /// Example
     /// ```rust
+    /// // loads in roads.csv from the data folder
     /// road_manager.load(); // cache is now overwritten by the contents of roads.csv
+    ///
+    /// // loads in a custom file
+    /// road_manager.load(Some("data/custom_roads.csv")); // cache is now overwritten by the contents of custom_roads.csv
     /// ```
-    pub fn load(&mut self) {
-        let mut rdr = csv::Reader::from_path("data/roads.csv").unwrap();
+    pub fn load(&mut self, _path: Option<&str>) {
+        let mut rdr = csv::Reader::from_path(_path.unwrap_or("data/roads.csv")).unwrap();
 
         self.cache = Some(Vec::<Road>::new());
 
