@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":[["init","initializes the window and runs the simulation"]]};

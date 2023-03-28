@@ -1,6 +1,2 @@
-target/*
-!target/**/
-target/doc/*
-target/debug/*
-!target/doc/**/
+/target
 Cargo.lock
