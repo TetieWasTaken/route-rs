@@ -20,6 +20,13 @@ use piston_window::*;
 use crate::managers::intersection::Intersection;
 use crate::managers::road::Road;
 
+/// initializes the window and runs the simulation
+///
+/// Example
+/// ```rust
+/// let (roads, intersections) = loaddata::load_data()?;
+/// init(roads, intersections); // initializes the window and runs the simulation
+/// ```
 pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
     let opengl = OpenGL::V3_2;
     let mut window: PistonWindow = WindowSettings::new("Rust Route", [800, 600])

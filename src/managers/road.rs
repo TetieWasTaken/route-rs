@@ -1,5 +1,3 @@
-use std::vec;
-
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Road {
     pub id: Option<i32>,
@@ -25,12 +23,14 @@ pub struct RoadManager {
 }
 
 impl RoadManager {
+    /// internal
     fn _add(&mut self, road: Road) {
         if let Some(cache) = &mut self.cache {
             cache.push(road);
         }
     }
 
+    /// internal
     fn _remove(&mut self, id: i32) {
         if let Some(cache) = &mut self.cache {
             let mut index = 0;
@@ -44,6 +44,12 @@ impl RoadManager {
         }
     }
 
+    /// Returns a road struct from the cache by id
+    ///
+    /// Example
+    /// ```rust
+    /// let road = road_manager.resolve(1).unwrap().clone(); // road with id 1 is now cloned into the road variable
+    /// ```
     pub fn resolve(&mut self, id: i32) -> Option<&Road> {
         if let Some(cache) = &self.cache {
             for road in cache {
@@ -55,6 +61,22 @@ impl RoadManager {
         None
     }
 
+    /// Creates a new road and adds it to the cache
+    ///
+    /// Example
+    /// ```rust
+    /// road_manager.create(Road {
+    ///   id: None,
+    ///   name: "Test Road".to_string(),
+    ///   start_lat: 0.0,
+    ///   stop_lat: 0.0,
+    ///   start_lon: 0.0,
+    ///   stop_lon: 0.0,
+    ///   speed_limit: 0.0,
+    ///   lane_count: 0.0,
+    ///   road_type: "asphalt".to_string(),
+    /// }); // a new road is added to the cache, with a unique id
+    /// ```
     pub fn create(&mut self, road: Road) {
         let mut id = 1;
 
@@ -76,10 +98,22 @@ impl RoadManager {
         self._add(road);
     }
 
+    /// Removes a road from the cache by id. This will not remove the road from the roads.csv file.
+    ///
+    /// Example
+    /// ```rust
+    /// road_manager.destroy(1); // road with id 1 is now removed from the cache
+    /// ```
     pub fn destroy(&mut self, id: i32) {
         self._remove(id);
     }
 
+    /// Stores the cache to the roads.csv file. This will overwrite the file.
+    ///
+    /// Example
+    /// ```rust
+    /// road_manager.store(); // roads.csv is now overwritten by the contents of the cache
+    /// ```
     pub fn store(&self) {
         let mut wtr = csv::Writer::from_path("data/roads.csv").unwrap();
 
@@ -90,6 +124,12 @@ impl RoadManager {
         wtr.flush().unwrap();
     }
 
+    /// Loads the roads.csv file into the cache. This will overwrite the cache.
+    ///
+    /// Example
+    /// ```rust
+    /// road_manager.load(); // cache is now overwritten by the contents of roads.csv
+    /// ```
     pub fn load(&mut self) {
         let mut rdr = csv::Reader::from_path("data/roads.csv").unwrap();
 
@@ -101,6 +141,12 @@ impl RoadManager {
         }
     }
 
+    /// Resets the cache to an empty vector
+    ///
+    /// Example
+    /// ```rust
+    /// road_manager.reset(); // cache is now empty
+    /// ```
     pub fn reset(&mut self) {
         self.cache = Some(Vec::<Road>::new());
     }
