@@ -1,6 +1,7 @@
 use std::env::current_dir;
 use std::error::Error;
 
+mod helpers;
 mod loaddata;
 mod managers;
 mod window;
