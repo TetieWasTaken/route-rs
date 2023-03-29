@@ -1,10 +1,10 @@
 #[derive(Clone, Copy)]
 pub enum LogLevel {
-    Error,
-    Warn,
-    Info,
-    Debug,
     Trace,
+    Debug,
+    Info,
+    Warn,
+    Error,
 }
 
 impl std::fmt::Display for LogLevel {
