@@ -28,8 +28,14 @@ use crate::managers::road::RoadManager;
 /// let (roads, intersections) = loaddata::load_data()?;
 /// init(roads, intersections); // initializes the window and runs the simulation
 /// ```
-pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
+pub fn init(
+    roads: Vec<Road>,
+    intersections: Vec<Intersection>,
+    logger: &crate::helpers::logger::Logger,
+) {
     let opengl = OpenGL::V3_2;
+
+    logger.trace("(window) create window");
     let mut window: PistonWindow = WindowSettings::new("Rust Route", [800, 600])
         .exit_on_esc(true)
         .graphics_api(opengl)
@@ -40,12 +46,15 @@ pub fn init(roads: Vec<Road>, intersections: Vec<Intersection>) {
 
     let mut gl = GlGraphics::new(opengl);
 
+    logger.trace("(roadmanager) init road manager");
     let mut road_manager = RoadManager {
         cache: Some(Vec::<Road>::new()),
     };
 
+    logger.trace("(roadmanager) load roads");
     road_manager.load(Some("sample/roads.csv"));
 
+    logger.info("(*) start render loop");
     while let Some(e) = window.next() {
         if let Some(button) = e.press_args() {
             if button == Button::Mouse(MouseButton::Left) {

@@ -11,7 +11,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         panic!("[WRONG_DIR] Please run this program from the src directory");
     }
 
+    // Todo: make logger global
+    let logger = helpers::logger::Logger::new(helpers::logger::LogLevel::Trace);
+
     let (roads, intersections) = loaddata::load_data()?;
-    window::init(roads, intersections);
+
+    logger.info("(main) run window");
+    window::init(roads, intersections, &logger);
     Ok(())
 }
