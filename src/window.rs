@@ -42,6 +42,7 @@ pub fn init(
         .build()
         .unwrap();
 
+    let mut state_counter = 0;
     let mut draw_road = false;
 
     let mut gl = GlGraphics::new(opengl);
@@ -58,7 +59,21 @@ pub fn init(
     while let Some(e) = window.next() {
         if let Some(button) = e.press_args() {
             if button == Button::Mouse(MouseButton::Left) {
-                draw_road = !draw_road;
+                if state_counter >= std::usize::MAX - 10 {
+                    state_counter = 0;
+                }
+
+                state_counter += 1;
+            }
+        };
+
+        if let Some(button) = e.release_args() {
+            if button == Button::Mouse(MouseButton::Left) {
+                if state_counter % 2 == 0 {
+                    draw_road = true;
+                } else {
+                    draw_road = false;
+                }
             }
         };
 
