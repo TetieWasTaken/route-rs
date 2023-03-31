@@ -126,7 +126,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                         }
                     }
                     States::Destroy => {}
-                    _ => {}
+                    _ => panic!("invalid state"),
                 }
             }
         };
