@@ -183,13 +183,6 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
             gl.draw(r.viewport(), |c, gl| {
                 clear([0.1137, 0.1098, 0.0902, 1.0], gl);
 
-                /*let center = c
-                    .transform
-                    .trans(r.window_size[0] / 2.0, r.window_size[1] / 2.0);
-                let scale = center.scale(10.0, 10.0); */
-
-                // Draw road_to_draw
-
                 if road_to_draw != [0.0, 0.0, 0.0, 0.0] {
                     line(
                         [0.3529, 0.3529, 0.3529, 1.0],
