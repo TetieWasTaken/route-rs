@@ -18,8 +18,15 @@ use piston::input::*;
 use piston_window::*;
 
 use crate::managers::intersection::Intersection;
+use crate::managers::intersection::IntersectionManager;
 use crate::managers::road::Road;
 use crate::managers::road::RoadManager;
+
+enum States {
+    DrawRoad,
+    DrawIntersection,
+    Destroy,
+}
 
 /// initializes the window and runs the simulation
 ///
@@ -43,6 +50,7 @@ pub fn init(
         .unwrap();
 
     let mut state_counter = 0;
+    let mut state = States::DrawRoad;
     let mut draw_road = false;
     let mut start_point: Option<[f64; 2]> = None;
     let mut road_to_draw: [f64; 4] = [0.0, 0.0, 0.0, 0.0];
@@ -56,6 +64,14 @@ pub fn init(
 
     logger.trace("(roadmanager) load roads");
     road_manager.load(Some("sample/roads.csv"));
+
+    logger.trace("(intersectionmanager) init intersection manager");
+    let mut intersection_manager = IntersectionManager {
+        cache: Some(Vec::<Intersection>::new()),
+    };
+
+    logger.trace("(intersectionmanager) load intersections");
+    intersection_manager.load(Some("sample/intersections.csv"));
 
     logger.info("(*) start render loop");
     while let Some(e) = window.next() {
@@ -71,24 +87,31 @@ pub fn init(
 
         if let Some(button) = e.release_args() {
             if button == Button::Mouse(MouseButton::Left) {
-                if state_counter % 2 == 0 {
-                    draw_road = true;
-                    start_point = e.mouse_cursor_args();
-                } else {
-                    road_manager.create(Road {
-                        _id: None,
-                        name: "test".to_string(),
-                        start_lat: road_to_draw[0],
-                        start_lon: road_to_draw[1],
-                        stop_lat: road_to_draw[2],
-                        stop_lon: road_to_draw[3],
-                        lane_count: 1.0,
-                        speed_limit: 50.0,
-                        road_type: "asphalt".to_string(),
-                    });
+                match state {
+                    States::DrawRoad => {
+                        if state_counter % 2 == 0 {
+                            draw_road = true;
+                            start_point = e.mouse_cursor_args();
+                        } else {
+                            road_manager.create(Road {
+                                _id: None,
+                                name: "test".to_string(),
+                                start_lat: road_to_draw[0],
+                                start_lon: road_to_draw[1],
+                                stop_lat: road_to_draw[2],
+                                stop_lon: road_to_draw[3],
+                                lane_count: 1.0,
+                                speed_limit: 50.0,
+                                road_type: "asphalt".to_string(),
+                            });
 
-                    draw_road = false;
-                    start_point = None;
+                            draw_road = false;
+                            start_point = None;
+                        }
+                    }
+                    States::DrawIntersection => {}
+                    States::Destroy => {}
+                    _ => {}
                 }
             }
         };
@@ -107,6 +130,22 @@ pub fn init(
             }
         } else {
             road_to_draw = [0.0, 0.0, 0.0, 0.0];
+        }
+
+        if let Some(Button::Keyboard(key)) = e.press_args() {
+            if key == Key::Space {
+                match state {
+                    States::DrawRoad => {
+                        state = States::DrawIntersection;
+                    }
+                    States::DrawIntersection => {
+                        state = States::Destroy;
+                    }
+                    States::Destroy => {
+                        state = States::DrawRoad;
+                    }
+                }
+            }
         }
 
         if let Some(r) = e.render_args() {
@@ -142,7 +181,7 @@ pub fn init(
 
                     line(color, 5.0, road.get_points(), c.transform, gl);
                 }
-                for intersection in &intersections {
+                for intersection in intersection_manager.cache.as_ref().unwrap() {
                     ellipse(
                         [0.0, 0.0, 1.0, 1.0],
                         [intersection.lon - 2.0, intersection.lat - 2.0, 4.0, 4.0],
