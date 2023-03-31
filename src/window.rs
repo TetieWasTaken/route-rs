@@ -8,7 +8,7 @@
 */
 
 use graphics::*;
-use opengl_graphics::{GlGraphics, OpenGL};
+use opengl_graphics::{GlGraphics, GlyphCache, OpenGL};
 use piston::input::*;
 use piston_window::*;
 use sdl2_window::Sdl2Window as Window;
@@ -47,6 +47,10 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
     let mut draw_intersection = false;
     let mut start_point: Option<[f64; 2]> = None;
     let mut road_to_draw: [f64; 4] = [0.0, 0.0, 0.0, 0.0];
+    let mut intersection_to_draw: [f64; 2] = [0.0, 0.0];
+
+    let font = "assets/FiraSans-Regular.ttf";
+    let mut glyphs = GlyphCache::new(font, (), TextureSettings::new()).unwrap();
 
     let mut gl = GlGraphics::new(opengl);
 
@@ -230,6 +234,26 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                         gl,
                     );
                 }
+
+                let state_text = match state {
+                    States::DrawRoad => "STATE: Road",
+                    States::DrawIntersection => "STATE: Intersection",
+                    States::Destroy => "STATE: Destroy",
+                };
+
+                let mut text = graphics::Text::new(32);
+
+                let text_width = glyphs.width(32, state_text).unwrap_or(0.0) as f64;
+                let text_height = glyphs.character(32, 'M').unwrap().advance_height() as f64;
+
+                let transform = c.transform.trans(
+                    c.viewport.unwrap().window_size[0] - text_width - 10.0,
+                    c.viewport.unwrap().window_size[1] - text_height - 10.0,
+                );
+
+                text.color = [1.0, 1.0, 1.0, 1.0];
+                text.draw(state_text, &mut glyphs, &c.draw_state, transform, gl)
+                    .unwrap();
             });
         }
     }
