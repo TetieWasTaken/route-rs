@@ -11,9 +11,9 @@ repository = "https://github.com/tetiewastaken/route-rs/"
 license = "Apache-2.0"
 
 [dependencies]
-piston = "*"
-piston_window = "*"
-piston2d-graphics = "*"
-piston2d-opengl_graphics = "*"
+piston = "0.53.2"
+piston_window = "0.128.0"
+piston2d-graphics = "0.43.0"
+piston2d-opengl_graphics = "0.82.0"
 serde = { version = "1", features = ["derive"] }
 csv = "1.1"
