@@ -1,6 +1,6 @@
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Road {
-    pub id: Option<i32>,
+    pub _id: Option<i32>,
     pub name: String,
     pub start_lat: f64,
     pub stop_lat: f64,
@@ -35,7 +35,7 @@ impl RoadManager {
         if let Some(cache) = &mut self.cache {
             let mut index = 0;
             for road in &mut *cache {
-                if road.id == Some(id) {
+                if road._id == Some(id) {
                     cache.remove(index);
                     break;
                 }
@@ -53,7 +53,7 @@ impl RoadManager {
     pub fn resolve(&mut self, id: i32) -> Option<&Road> {
         if let Some(cache) = &self.cache {
             for road in cache {
-                if road.id == Some(id) {
+                if road._id == Some(id) {
                     return Some(road);
                 }
             }
@@ -66,7 +66,7 @@ impl RoadManager {
     /// Example
     /// ```rust
     /// road_manager.create(Road {
-    ///   id: None,
+    ///   _id: None,
     ///   name: "Test Road".to_string(),
     ///   start_lat: 0.0,
     ///   stop_lat: 0.0,
@@ -85,13 +85,13 @@ impl RoadManager {
             .as_ref()
             .unwrap()
             .iter()
-            .any(|r| r.id == Some(id))
+            .any(|r| r._id == Some(id))
         {
             id += 1;
         }
 
         let road = Road {
-            id: Some(id),
+            _id: Some(id),
             ..road
         };
 
