@@ -11,6 +11,7 @@ use graphics::*;
 use opengl_graphics::{GlGraphics, OpenGL};
 use piston::input::*;
 use piston_window::*;
+use sdl2_window::Sdl2Window as Window;
 
 use crate::managers::intersection::Intersection;
 use crate::managers::intersection::IntersectionManager;
@@ -34,7 +35,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
     let opengl = OpenGL::V3_2;
 
     logger.trace("(window) create window");
-    let mut window: PistonWindow = WindowSettings::new("Rust Route", [800, 600])
+    let mut window: Window = WindowSettings::new("Rust Route", [800, 600])
         .exit_on_esc(true)
         .graphics_api(opengl)
         .build()
@@ -65,7 +66,10 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
     intersection_manager.load(Some("sample/intersections.csv"));
 
     logger.info("(*) start render loop");
-    while let Some(e) = window.next() {
+
+    let mut events = Events::new(EventSettings::new());
+
+    while let Some(e) = events.next(&mut window) {
         if let Some(button) = e.press_args() {
             if button == Button::Mouse(MouseButton::Left) {
                 if state_counter >= std::usize::MAX - 10 {

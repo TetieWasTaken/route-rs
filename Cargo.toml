@@ -15,5 +15,6 @@ piston = "0.53.2"
 piston_window = "0.128.0"
 piston2d-graphics = "0.43.0"
 piston2d-opengl_graphics = "0.82.0"
+pistoncore-sdl2_window = "0.68.0"
 serde = { version = "1", features = ["derive"] }
 csv = "1.1"
