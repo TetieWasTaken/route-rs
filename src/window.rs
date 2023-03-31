@@ -32,14 +32,10 @@ enum States {
 ///
 /// Example
 /// ```rust
-/// let (roads, intersections) = loaddata::load_data()?;
-/// init(roads, intersections); // initializes the window and runs the simulation
+/// let logger = helpers::logger::Logger::new(helpers::logger::LogLevel::Info);
+/// init(logger); // initializes the window and runs the simulation
 /// ```
-pub fn init(
-    roads: Vec<Road>,
-    intersections: Vec<Intersection>,
-    logger: &crate::helpers::logger::Logger,
-) {
+pub fn init(logger: &crate::helpers::logger::Logger) {
     let opengl = OpenGL::V3_2;
 
     logger.trace("(window) create window");
