@@ -156,6 +156,11 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
 
         if let Some(Button::Keyboard(key)) = e.press_args() {
             if key == Key::Space {
+                state_counter = 0;
+                draw_road = false;
+                draw_intersection = false;
+                start_point = None;
+
                 match state {
                     States::DrawRoad => {
                         state = States::DrawIntersection;
