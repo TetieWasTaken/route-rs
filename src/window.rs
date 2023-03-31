@@ -44,6 +44,8 @@ pub fn init(
 
     let mut state_counter = 0;
     let mut draw_road = false;
+    let mut start_point: Option<[f64; 2]> = None;
+    let mut road_to_draw: [f64; 4] = [0.0, 0.0, 0.0, 0.0];
 
     let mut gl = GlGraphics::new(opengl);
 
@@ -71,26 +73,62 @@ pub fn init(
             if button == Button::Mouse(MouseButton::Left) {
                 if state_counter % 2 == 0 {
                     draw_road = true;
+                    start_point = e.mouse_cursor_args();
                 } else {
+                    road_manager.create(Road {
+                        _id: None,
+                        name: "test".to_string(),
+                        start_lat: road_to_draw[0],
+                        start_lon: road_to_draw[1],
+                        stop_lat: road_to_draw[2],
+                        stop_lon: road_to_draw[3],
+                        lane_count: 1.0,
+                        speed_limit: 50.0,
+                        road_type: "asphalt".to_string(),
+                    });
+
                     draw_road = false;
+                    start_point = None;
                 }
             }
         };
 
         if draw_road {
             if let Some(pos) = e.mouse_cursor_args() {
-                println!("Mouse position: {:?}", pos);
+                if !start_point.is_some() {
+                    start_point = Some(pos);
+                }
+                road_to_draw = [
+                    start_point.unwrap()[0],
+                    start_point.unwrap()[1],
+                    pos[0],
+                    pos[1],
+                ];
             }
+        } else {
+            road_to_draw = [0.0, 0.0, 0.0, 0.0];
         }
 
         if let Some(r) = e.render_args() {
             gl.draw(r.viewport(), |c, gl| {
                 clear([0.1137, 0.1098, 0.0902, 1.0], gl);
 
-                let center = c
+                /*let center = c
                     .transform
                     .trans(r.window_size[0] / 2.0, r.window_size[1] / 2.0);
-                let scale = center.scale(10.0, 10.0);
+                let scale = center.scale(10.0, 10.0); */
+
+                // Draw road_to_draw
+
+                if road_to_draw != [0.0, 0.0, 0.0, 0.0] {
+                    line(
+                        [0.3529, 0.3529, 0.3529, 1.0],
+                        5.0,
+                        road_to_draw,
+                        c.transform,
+                        gl,
+                    );
+                }
 
                 for road in road_manager.cache.as_ref().unwrap() {
                     let color;
@@ -102,13 +140,13 @@ pub fn init(
                         _ => color = [0.0, 0.0, 0.0, 1.0],
                     }
 
-                    line(color, 1.0, road.get_points(), scale, gl);
+                    line(color, 5.0, road.get_points(), c.transform, gl);
                 }
                 for intersection in &intersections {
                     ellipse(
                         [0.0, 0.0, 1.0, 1.0],
                         [intersection.lon - 2.0, intersection.lat - 2.0, 4.0, 4.0],
-                        scale.trans(intersection.lon, -intersection.lat),
+                        c.transform,
                         gl,
                     );
                 }
