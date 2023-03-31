@@ -41,7 +41,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
         .build()
         .unwrap();
 
-    let mut state_counter = 0;
+    let mut state_counter = 1;
     let mut state = States::DrawRoad;
     let mut draw_road = false;
     let mut draw_intersection = false;
@@ -78,7 +78,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
         if let Some(button) = e.press_args() {
             if button == Button::Mouse(MouseButton::Left) {
                 if state_counter >= std::usize::MAX - 10 {
-                    state_counter = 0;
+                    state_counter = 1;
                 }
 
                 state_counter += 1;
@@ -160,7 +160,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
 
         if let Some(Button::Keyboard(key)) = e.press_args() {
             if key == Key::Space {
-                state_counter = 0;
+                state_counter = 1;
                 draw_road = false;
                 draw_intersection = false;
                 start_point = None;
