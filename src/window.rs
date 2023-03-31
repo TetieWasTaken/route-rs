@@ -44,6 +44,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
     let mut state_counter = 0;
     let mut state = States::DrawRoad;
     let mut draw_road = false;
+    let mut draw_intersection = false;
     let mut start_point: Option<[f64; 2]> = None;
     let mut road_to_draw: [f64; 4] = [0.0, 0.0, 0.0, 0.0];
 
@@ -104,7 +105,22 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                             start_point = None;
                         }
                     }
-                    States::DrawIntersection => {}
+                    States::DrawIntersection => {
+                        if state_counter % 2 == 0 {
+                            draw_intersection = true;
+                            start_point = e.mouse_cursor_args();
+                        } else {
+                            intersection_manager.create(Intersection {
+                                _id: None,
+                                lat: intersection_to_draw[0],
+                                lon: intersection_to_draw[1],
+                                traffic_lights: false,
+                            });
+
+                            draw_intersection = false;
+                            start_point = None;
+                        }
+                    }
                     States::Destroy => {}
                     _ => {}
                 }
@@ -125,6 +141,17 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
             }
         } else {
             road_to_draw = [0.0, 0.0, 0.0, 0.0];
+        }
+
+        if draw_intersection {
+            if let Some(pos) = e.mouse_cursor_args() {
+                if !start_point.is_some() {
+                    start_point = Some(pos);
+                }
+                intersection_to_draw = [start_point.unwrap()[0], start_point.unwrap()[1]];
+            }
+        } else {
+            intersection_to_draw = [0.0, 0.0];
         }
 
         if let Some(Button::Keyboard(key)) = e.press_args() {
@@ -159,6 +186,20 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                         [0.3529, 0.3529, 0.3529, 1.0],
                         5.0,
                         road_to_draw,
+                        c.transform,
+                        gl,
+                    );
+                }
+
+                if intersection_to_draw != [0.0, 0.0] {
+                    ellipse(
+                        [0.0, 0.0, 1.0, 1.0],
+                        [
+                            intersection_to_draw[0] - 2.0,
+                            intersection_to_draw[1] - 2.0,
+                            4.0,
+                            4.0,
+                        ],
                         c.transform,
                         gl,
                     );
