@@ -4,6 +4,7 @@ use piston::input::*;
 use piston_window::*;
 use sdl2_window::Sdl2Window as Window;
 
+use crate::constants::colors::*;
 use crate::managers::intersection::Intersection;
 use crate::managers::intersection::IntersectionManager;
 use crate::managers::road::Road;
@@ -211,21 +212,15 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
 
         if let Some(r) = e.render_args() {
             gl.draw(r.viewport(), |c, gl| {
-                clear([0.1137, 0.1098, 0.0902, 1.0], gl);
+                clear(COLOR_BACKGROUND, gl);
 
                 if road_to_draw != [0.0, 0.0, 0.0, 0.0] {
-                    line(
-                        [0.3529, 0.3529, 0.3529, 1.0],
-                        5.0,
-                        road_to_draw,
-                        c.transform,
-                        gl,
-                    );
+                    line(COLOR_ASPHALT, 5.0, road_to_draw, c.transform, gl);
                 }
 
                 if intersection_to_draw != [0.0, 0.0] {
                     ellipse(
-                        [0.0, 0.0, 1.0, 1.0],
+                        COLOR_INTERSECTION,
                         [
                             intersection_to_draw[0] - 6.0,
                             intersection_to_draw[1] - 6.0,
@@ -241,17 +236,17 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                     let color;
 
                     match road.road_type.as_str() {
-                        "asphalt" => color = [0.3529, 0.3529, 0.3529, 1.0],
-                        "dirt" => color = [0.5, 0.5, 0.5, 1.0],
-                        "gravel" => color = [0.8, 0.8, 0.8, 1.0],
-                        _ => color = [0.0, 0.0, 0.0, 1.0],
+                        "asphalt" => color = COLOR_ASPHALT,
+                        "dirt" => color = COLOR_DIRT,
+                        "gravel" => color = COLOR_GRAVEL,
+                        _ => color = COLOR_SOLID_BLACK,
                     }
 
                     line(color, 5.0, road.get_points(), c.transform, gl);
                 }
                 for intersection in intersection_manager.cache.as_ref().unwrap() {
                     ellipse(
-                        [0.0, 0.0, 1.0, 1.0],
+                        COLOR_INTERSECTION,
                         [intersection.lat - 6.0, intersection.lon - 6.0, 12.0, 12.0],
                         c.transform,
                         gl,
