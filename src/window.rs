@@ -1,12 +1,3 @@
-/* PSEUDO
-
-    - Create a window
-    - Create a loop that runs until the window is closed
-    - In the loop, draw the roads and intersections
-    - Once the simulation is done, close the window
-
-*/
-
 use graphics::*;
 use opengl_graphics::{GlGraphics, GlyphCache, OpenGL};
 use piston::input::*;
