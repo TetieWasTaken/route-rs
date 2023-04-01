@@ -3,3 +3,4 @@ _id,name,start_lat,stop_lat,start_lon,stop_lon,speed_limit,lane_count,road_type
 2,Broadway Avenue,30.10,20.98,50.36,120.34,45,1,dirt
 3,Park Lane,20.87,20.55,10.24,50.92,50,2,asphalt
 4,Sunset Boulevard,100,20,50,50,50,2,asphalt
+5,Gravel Street,20.99,30.21,200.93,90.6,60,3,gravel
