@@ -112,7 +112,6 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                     States::DrawIntersection => {
                         if state_counter % 2 == 0 {
                             draw_intersection = true;
-                            start_point = e.mouse_cursor_args();
                         } else {
                             intersection_manager.create(Intersection {
                                 _id: None,
@@ -122,7 +121,6 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                             });
 
                             draw_intersection = false;
-                            start_point = None;
                         }
                     }
                     States::Destroy => {}
@@ -149,10 +147,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
 
         if draw_intersection {
             if let Some(pos) = e.mouse_cursor_args() {
-                if !start_point.is_some() {
-                    start_point = Some(pos);
-                }
-                intersection_to_draw = [start_point.unwrap()[0], start_point.unwrap()[1]];
+                intersection_to_draw = pos;
             }
         } else {
             intersection_to_draw = [0.0, 0.0];
