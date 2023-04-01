@@ -158,7 +158,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                             let dy = intersection.lon - latest_mouse_pos[1];
                             let distance = (dx.powi(2) + dy.powi(2)).sqrt();
 
-                            if distance <= 12.0 {
+                            if distance <= 6.0 {
                                 intersections_to_destroy.push(intersection._id.unwrap());
                                 break;
                             }
