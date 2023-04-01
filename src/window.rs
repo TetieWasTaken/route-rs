@@ -150,6 +150,23 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                         for road_id in roads_to_destroy {
                             road_manager.destroy(road_id);
                         }
+
+                        let mut intersections_to_destroy = vec![];
+
+                        for intersection in intersection_manager.cache.as_ref().unwrap().iter() {
+                            let dx = intersection.lat - latest_mouse_pos[0];
+                            let dy = intersection.lon - latest_mouse_pos[1];
+                            let distance = (dx.powi(2) + dy.powi(2)).sqrt();
+
+                            if distance <= 12.0 {
+                                intersections_to_destroy.push(intersection._id.unwrap());
+                                break;
+                            }
+                        }
+
+                        for intersection_id in intersections_to_destroy {
+                            intersection_manager.destroy(intersection_id);
+                        }
                     }
                     _ => panic!("invalid state"),
                 }
