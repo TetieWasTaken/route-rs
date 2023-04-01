@@ -1,4 +1,4 @@
-id,lat,lon,traffic_lights
+_id,lat,lon,traffic_lights
 1,50.65,70.23,true
 2,30.24,10.34,false
 3,10.93,40.75,false

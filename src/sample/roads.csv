@@ -1,4 +1,4 @@
-id,name,start_lat,stop_lat,start_lon,stop_lon,speed_limit,lane_count,road_type
+_id,name,start_lat,stop_lat,start_lon,stop_lon,speed_limit,lane_count,road_type
 1,Main Street,10.99,20.21,100.93,80.6,60,3,asphalt
 2,Broadway Avenue,30.10,20.98,50.36,120.34,45,1,dirt
 3,Park Lane,20.87,20.55,10.24,50.92,50,2,asphalt
