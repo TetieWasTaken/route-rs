@@ -236,8 +236,8 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                     ellipse(
                         [0.0, 0.0, 1.0, 1.0],
                         [
-                            intersection_to_draw[0] - 2.0,
-                            intersection_to_draw[1] - 2.0,
+                            intersection_to_draw[0] - 6.0,
+                            intersection_to_draw[1] - 6.0,
                             12.0,
                             12.0,
                         ],
@@ -261,7 +261,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                 for intersection in intersection_manager.cache.as_ref().unwrap() {
                     ellipse(
                         [0.0, 0.0, 1.0, 1.0],
-                        [intersection.lat - 2.0, intersection.lon - 2.0, 12.0, 12.0],
+                        [intersection.lat - 6.0, intersection.lon - 6.0, 12.0, 12.0],
                         c.transform,
                         gl,
                     );
