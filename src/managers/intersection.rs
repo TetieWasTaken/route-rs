@@ -89,6 +89,10 @@ impl IntersectionManager {
     /// intersection_manager.destroy(1);
     /// ```
     pub fn destroy(&mut self, id: i32) {
+        if id < 0 {
+            return;
+        }
+
         self._remove(id);
     }
 

@@ -105,6 +105,10 @@ impl RoadManager {
     /// road_manager.destroy(1); // road with id 1 is now removed from the cache
     /// ```
     pub fn destroy(&mut self, id: i32) {
+        if id < 0 {
+            return;
+        }
+
         self._remove(id);
     }
 
