@@ -18,6 +18,7 @@ use crate::managers::intersection::IntersectionManager;
 use crate::managers::road::Road;
 use crate::managers::road::RoadManager;
 
+#[derive(PartialEq)]
 enum States {
     DrawRoad,
     DrawIntersection,
@@ -48,6 +49,7 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
     let mut start_point: Option<[f64; 2]> = None;
     let mut road_to_draw: [f64; 4] = [0.0, 0.0, 0.0, 0.0];
     let mut intersection_to_draw: [f64; 2] = [0.0, 0.0];
+    let mut latest_mouse_pos: [f64; 2] = [0.0, 0.0];
 
     let font = "assets/FiraSans-Regular.ttf";
     let mut glyphs = GlyphCache::new(font, (), TextureSettings::new()).unwrap();
@@ -84,6 +86,10 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                 state_counter += 1;
             }
         };
+
+        if let Some(pos) = e.mouse_cursor_args() {
+            latest_mouse_pos = pos;
+        }
 
         if let Some(button) = e.release_args() {
             if button == Button::Mouse(MouseButton::Left) {
@@ -123,7 +129,28 @@ pub fn init(logger: &crate::helpers::logger::Logger) {
                             draw_intersection = false;
                         }
                     }
-                    States::Destroy => {}
+                    States::Destroy => {
+                        let mut roads_to_destroy = vec![];
+
+                        for road in road_manager.cache.as_ref().unwrap().iter() {
+                            let segments = road.segment(10.0);
+
+                            for segment in segments {
+                                let dx = segment.0 - latest_mouse_pos[0];
+                                let dy = segment.1 - latest_mouse_pos[1];
+                                let distance = (dx.powi(2) + dy.powi(2)).sqrt();
+
+                                if distance <= 5.0 {
+                                    roads_to_destroy.push(road._id.unwrap());
+                                    break;
+                                }
+                            }
+                        }
+
+                        for road_id in roads_to_destroy {
+                            road_manager.destroy(road_id);
+                        }
+                    }
                     _ => panic!("invalid state"),
                 }
             }

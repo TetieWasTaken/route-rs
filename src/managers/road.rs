@@ -12,8 +12,39 @@ pub struct Road {
 }
 
 impl Road {
+    /// Returns the start and stop points of the road
     pub fn get_points(&self) -> [f64; 4] {
         [self.start_lat, self.start_lon, self.stop_lat, self.stop_lon]
+    }
+
+    /// Returns the length of the road
+    pub fn length(&self) -> f64 {
+        ((self.start_lat - self.stop_lat).powi(2) + (self.start_lon - self.stop_lon).powi(2)).sqrt()
+    }
+
+    /// Returns a vector of points that are `segment_length` apart
+    ///
+    /// Example
+    /// ```rust
+    /// let points = road.segment(10.0);
+    /// for segment in points {
+    ///    println!("{:?}", segment); // prints the lat and lon of each segment
+    /// }
+    /// ```
+    pub fn segment(&self, segment_length: f64) -> Vec<(f64, f64)> {
+        let num_segments = (self.length() / segment_length).ceil() as usize;
+        let d_lat = (self.stop_lat - self.start_lat) / num_segments as f64;
+        let d_lon = (self.stop_lon - self.start_lon) / num_segments as f64;
+        let mut lat = self.start_lat;
+        let mut lon = self.start_lon;
+        let mut result = Vec::new();
+        for _ in 0..num_segments {
+            result.push((lat, lon));
+            lat += d_lat;
+            lon += d_lon;
+        }
+        result.push((self.stop_lat, self.stop_lon));
+        result
     }
 }
 
