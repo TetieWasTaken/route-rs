@@ -21,11 +21,12 @@ enum States {
 ///
 /// Example
 /// ```rust
-/// let logger = helpers::logger::Logger::new(helpers::logger::LogLevel::Info);
-/// init(logger); // initializes the window and runs the simulation
+/// init(); // initializes the window and runs the simulation
 /// ```
-pub fn init(logger: &crate::helpers::logger::Logger) {
+pub fn init() {
     let opengl = OpenGL::V3_2;
+
+    let logger = crate::get_logger();
 
     logger.trace("(window) create window");
     let mut window: Window = WindowSettings::new("Rust Route", [800, 600])
