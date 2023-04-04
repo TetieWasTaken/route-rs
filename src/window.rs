@@ -4,11 +4,12 @@ use piston::input::*;
 use piston_window::*;
 use sdl2_window::Sdl2Window as Window;
 
+use std::sync::{Mutex, MutexGuard, RwLock, RwLockReadGuard, RwLockWriteGuard};
+
 use crate::constants::colors::*;
+use crate::get_history_manager;
 use crate::managers::intersection::Intersection;
-use crate::managers::intersection::IntersectionManager;
 use crate::managers::road::Road;
-use crate::managers::road::RoadManager;
 
 #[derive(PartialEq)]
 enum States {
@@ -50,17 +51,13 @@ pub fn init() {
     let mut gl = GlGraphics::new(opengl);
 
     logger.trace("(roadmanager) init road manager");
-    let mut road_manager = RoadManager {
-        cache: Some(Vec::<Road>::new()),
-    };
+    let mut road_manager = crate::get_road_manager().write().unwrap();
 
     logger.trace("(roadmanager) load roads");
     road_manager.load(Some("sample/roads.csv"));
 
     logger.trace("(intersectionmanager) init intersection manager");
-    let mut intersection_manager = IntersectionManager {
-        cache: Some(Vec::<Intersection>::new()),
-    };
+    let mut intersection_manager = crate::get_intersection_manager().lock().unwrap();
 
     logger.trace("(intersectionmanager) load intersections");
     intersection_manager.load(Some("sample/intersections.csv"));
@@ -208,6 +205,13 @@ pub fn init() {
                         state = States::DrawRoad;
                     }
                 }
+            }
+
+            if key == Key::Z {
+                println!("undo");
+                get_history_manager().lock().unwrap().undo();
+                // FIXME: UNDO DEADLOCK
+                // TODO: UNDO
             }
         }
 

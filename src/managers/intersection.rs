@@ -1,4 +1,8 @@
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+use crate::get_history_manager;
+use crate::get_logger;
+use crate::managers::history::*;
+
+#[derive(Debug, Copy, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Intersection {
     pub _id: Option<i32>,
     pub lat: f64,
@@ -30,6 +34,12 @@ impl IntersectionManager {
                 }
                 index += 1;
             }
+        }
+    }
+
+    pub fn new() -> Self {
+        Self {
+            cache: Some(Vec::<Intersection>::new()),
         }
     }
 
@@ -80,6 +90,15 @@ impl IntersectionManager {
         };
 
         self._add(intersection);
+
+        get_history_manager()
+            .lock()
+            .expect("Failed to lock history manager")
+            .create(HistoryEntry {
+                data: HistoryEntryData::Intersection(intersection.clone()),
+                entry_type: HistoryEntryType::Create,
+                manager: Manager::Intersection,
+            });
     }
 
     /// Removes an intersection from the cache
@@ -93,7 +112,22 @@ impl IntersectionManager {
             return;
         }
 
+        let intersection = self.resolve(id).unwrap().clone();
+        if intersection._id.is_none() {
+            get_logger().warn("Unable to resolve intersection");
+            return;
+        }
+
         self._remove(id);
+
+        get_history_manager()
+            .lock()
+            .expect("Failed to lock history manager")
+            .create(HistoryEntry {
+                data: HistoryEntryData::Intersection(intersection),
+                entry_type: HistoryEntryType::Destroy,
+                manager: Manager::Intersection,
+            });
     }
 
     /// Stores the cache to the intersections.csv file. This will overwrite the file.

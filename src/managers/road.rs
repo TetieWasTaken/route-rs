@@ -1,3 +1,7 @@
+use crate::get_history_manager;
+use crate::get_logger;
+use crate::managers::history::*;
+
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct Road {
     pub _id: Option<i32>,
@@ -75,6 +79,12 @@ impl RoadManager {
         }
     }
 
+    pub fn new() -> Self {
+        Self {
+            cache: Some(Vec::<Road>::new()),
+        }
+    }
+
     /// Returns a road struct from the cache by id
     ///
     /// Example
@@ -109,6 +119,8 @@ impl RoadManager {
     /// }); // a new road is added to the cache, with a unique id
     /// ```
     pub fn create(&mut self, road: Road) {
+        println!("creating road");
+
         let mut id = 1;
 
         while self
@@ -126,7 +138,18 @@ impl RoadManager {
             ..road
         };
 
+        println!("created road: {:?}", road);
+
+        let road_clone = road.clone();
         self._add(road);
+
+        println!("added road to cache");
+
+        get_history_manager().lock().unwrap().create(HistoryEntry {
+            data: HistoryEntryData::Road(road_clone),
+            entry_type: HistoryEntryType::Create,
+            manager: Manager::Road,
+        });
     }
 
     /// Removes a road from the cache by id. This will not remove the road from the roads.csv file.
@@ -140,7 +163,23 @@ impl RoadManager {
             return;
         }
 
+        let road = self.resolve(id).unwrap().clone();
+
+        if !road._id.is_some() {
+            get_logger().warn("Unable to resolve road");
+            return;
+        }
+
         self._remove(id);
+
+        get_history_manager()
+            .lock()
+            .expect("Failed to lock history manager")
+            .create(HistoryEntry {
+                data: HistoryEntryData::Road(road),
+                entry_type: HistoryEntryType::Destroy,
+                manager: Manager::Road,
+            });
     }
 
     /// Stores the cache to the roads.csv file. This will overwrite the file.
